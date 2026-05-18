@@ -1,6 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
+import ConnectWallet from "./wallet/ConnectWallet";
 
 export default function Hero() {
   return (
@@ -31,9 +32,7 @@ export default function Hero() {
 
         {/* Buttons */}
         <div className="mt-10 flex flex-col items-center justify-center gap-4 sm:flex-row">
-          <button className="rounded-2xl bg-blue-500 px-8 py-4 font-semibold text-white transition hover:bg-blue-600">
-            Connect Wallet
-          </button>
+          <ConnectWallet />
 
           <button className="rounded-2xl border border-zinc-700 px-8 py-4 font-semibold text-white transition hover:border-blue-500">
             Generate Certificate
