@@ -11,17 +11,22 @@ export function generateCertificateMetadata(
 ) {
   return {
     name: `${data.studentName} Certificate`,
-    
     description: data.description,
+
+    image: "ipfs://certificate-image-placeholder",
 
     attributes: [
       {
-        trait_type: "Student",
+        trait_type: "Student Name",
         value: data.studentName,
       },
       {
-        trait_type: "Course",
+        trait_type: "Course Name",
         value: data.courseName,
+      },
+      {
+        trait_type: "Wallet Address",
+        value: data.walletAddress,
       },
       {
         trait_type: "Issue Date",
