@@ -44,9 +44,7 @@ export default function Navbar() {
             About
           </a>
 
-          <button className="rounded-xl bg-blue-500 px-5 py-2 text-sm font-medium text-white transition hover:bg-blue-600">
-            Connect Wallet
-          </button>
+          <ConnectWallet />
         </div>
 
         {/* Mobile Button */}
