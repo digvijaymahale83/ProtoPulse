@@ -4,6 +4,8 @@ import { motion } from "framer-motion";
 import ConnectWallet from "./wallet/ConnectWallet";
 
 export default function Hero() {
+
+
   return (
     <section className="relative flex min-h-screen items-center justify-center overflow-hidden bg-black px-6 text-white">
 
@@ -34,7 +36,16 @@ export default function Hero() {
         <div className="mt-10 flex flex-col items-center justify-center gap-4 sm:flex-row">
           <ConnectWallet />
 
-          <button className="rounded-2xl border border-zinc-700 px-8 py-4 font-semibold text-white transition hover:border-blue-500">
+          <button
+            onClick={() => {
+              document
+                .getElementById("certificate")
+                ?.scrollIntoView({
+                  behavior: "smooth",
+                });
+            }}
+            className="rounded-2xl border border-zinc-700 px-8 py-4 font-semibold text-white transition hover:border-blue-500"
+          >
             Generate Certificate
           </button>
         </div>
