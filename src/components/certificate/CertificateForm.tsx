@@ -6,16 +6,22 @@ import {
   generateCertificateMetadata,
 } from "@/services/certificate";
 import { useWalletContext } from "@/context/WalletContext";
-import { prepareMintPayload } from "@/services/mint";
 import {
   switchToBaseSepolia
 } from "@/services/network";
 import {
   getEthereumProvider
 } from "@/lib/web3";
+import { mintNFT } from "@/services/contract";
+import { ethers } from "ethers";
 
 
 export default function CertificateForm() {
+  const [loading, setLoading] = useState(false);
+  const [txHash, setTxHash] = useState("");
+  const [error, setError] = useState("");
+  const [mintSuccess, setMintSuccess] = useState(false);
+
   const [formData, setFormData] = useState({
     studentName: "",
     courseName: "",
@@ -46,54 +52,75 @@ export default function CertificateForm() {
   };
 
   const handleMint = async () => {
-    const finalWalletAddress =
-      walletAddress || formData.walletAddress;
+    try {
 
-    if (
-      !formData.studentName ||
-      !formData.courseName ||
-      !finalWalletAddress ||
-      !formData.issueDate
-    ) {
-      alert("Please fill all required fields");
-      return;
+      const finalWalletAddress =
+        walletAddress || formData.walletAddress;
+
+      if (!ethers.isAddress(finalWalletAddress)) {
+        alert("Invalid wallet address");
+        return;
+}
+      if (
+        !formData.studentName ||
+        !formData.courseName ||
+        !finalWalletAddress ||
+        !formData.issueDate
+      ) {
+        alert("Please fill all required fields");
+        return;
+      }
+
+      setLoading(true);
+
+      await switchToBaseSepolia();
+
+      const provider = await getEthereumProvider();
+      const signer = await provider.getSigner();
+
+      const address = await signer.getAddress();
+
+      console.log("Connected Wallet:", address);
+
+      //metadata
+      const metadata = generateCertificateMetadata(formData);
+
+      console.log("Metadata:", metadata);
+
+      // REAL MINT (tokenURI should come from IPFS in real project)
+      //store JSON inside string (temporary dev method for hack)
+      const tokenURI = `data:application/json;base64,${btoa(
+        JSON.stringify(metadata)
+      )}`;
+
+      const result = await mintNFT(
+        signer,
+        finalWalletAddress,
+        tokenURI
+      );
+
+      console.log("Tx Hash:", result.txHash);
+
+      setTxHash(result.txHash);
+
+      setMintSuccess(true);
+
+      alert(`NFT Minted 🚀\nTx: ${result.txHash}`);
+
+    } catch (error: any) {
+      console.error(error);
+
+      const message =
+        error?.reason ||
+        error?.message ||
+        "Mint failed";
+
+      setError(message);
+    } finally {
+      setError("");
+      setMintSuccess(false);
+      setLoading(false);
     }
-
-    console.log("Generating NFT metadata...");
-
-    await switchToBaseSepolia();
-
-    const provider =
-      await getEthereumProvider();
-
-    const signer =
-      await provider.getSigner();
-
-    const address =
-      await signer.getAddress();
-
-    console.log(
-      "Connected Wallet:",
-      address
-    );
-
-    const payload = await prepareMintPayload({
-      studentName: formData.studentName,
-      courseName: formData.courseName,
-      walletAddress: finalWalletAddress,
-      issueDate: formData.issueDate,
-      description: formData.description,
-    });
-
-    console.log("Blockchain Mint Payload:", payload);
-
-    console.log("Preparing blockchain mint payload...");
-
-    await new Promise((resolve) =>
-      setTimeout(resolve, 2000)
-    );
-
-    alert("NFT Mint Payload Ready 🚀");
   };
 
   return (
@@ -113,6 +140,7 @@ export default function CertificateForm() {
           <div className="space-y-5">
 
             <input
+              disabled={loading}
               type="text"
               name="studentName"
               placeholder="Student Name"
@@ -122,6 +150,7 @@ export default function CertificateForm() {
             />
 
             <input
+              disabled={loading}
               type="text"
               name="courseName"
               placeholder="Course Name"
@@ -131,6 +160,7 @@ export default function CertificateForm() {
             />
 
             <input
+              disabled={loading}
               type="text"
               name="walletAddress"
               placeholder="Wallet Address"
@@ -141,6 +171,7 @@ export default function CertificateForm() {
             />
 
             <input
+              disabled={loading}
               type="date"
               name="issueDate"
               value={formData.issueDate}
@@ -149,6 +180,7 @@ export default function CertificateForm() {
             />
 
             <textarea
+              disabled={loading}
               name="description"
               placeholder="Certificate Description"
               value={formData.description}
@@ -159,10 +191,46 @@ export default function CertificateForm() {
 
             <button
               onClick={handleMint}
-              className="w-full rounded-2xl bg-blue-500 py-4 font-semibold transition hover:bg-blue-600"
+              disabled={loading}
+              className="w-full rounded-2xl bg-blue-500 py-4 font-semibold transition hover:bg-blue-600 disabled:cursor-not-allowed disabled:opacity-50"
             >
-              Mint NFT Certificate
+              {loading ? "Processing Blockchain Transaction..." : "Mint NFT Certificate"}
             </button>
+
+            {mintSuccess && (
+              <div className="mt-6 rounded-2xl border border-green-500/30 bg-green-500/10 p-5">
+
+                <h3 className="text-lg font-bold text-green-400">
+                  NFT Minted Successfully 🚀
+                </h3>
+
+                <p className="mt-2 break-all text-sm text-zinc-300">
+                  Transaction Hash:
+                </p>
+
+                <p className="mt-1 break-all text-xs text-blue-400">
+                  {txHash}
+                </p>
+
+                <a
+                  href={`https://sepolia.basescan.org/tx/${txHash}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="mt-4 inline-block rounded-xl bg-blue-500 px-5 py-2 text-sm font-semibold text-white transition hover:bg-blue-600"
+                >
+                  View on BaseScan
+                </a>
+
+              </div>
+            )}
+
+            {error && (
+              <div className="mt-4 rounded-2xl border border-red-500/30 bg-red-500/10 p-4">
+                <p className="text-sm text-red-400">
+                  {error}
+                </p>
+              </div>
+            )}
 
           </div>
         </div>
