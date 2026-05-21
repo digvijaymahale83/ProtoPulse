@@ -33,9 +33,7 @@ export default function Footer() {
             How It Works
           </a>
 
-          <a href="#" className="hover:text-white">
-            GitHub
-          </a>
+    
         </div>
 
         {/* Right */}
