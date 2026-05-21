@@ -37,7 +37,10 @@ export default function Features() {
           className="text-center"
         >
           <h2 className="text-4xl font-bold md:text-5xl">
-            Powerful Features
+            Powerful {" "}
+            <span className="inline-block bg-gradient-to-r from-blue-400 to-cyan-300 bg-clip-text text-transparent">
+              Features
+            </span>
           </h2>
 
           <p className="mt-4 text-gray-400">

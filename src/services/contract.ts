@@ -1,6 +1,6 @@
 import { ethers } from "ethers";
 
-const CONTRACT_ADDRESS = "YOUR_CONTRACT_ADDRESS_HERE";
+const CONTRACT_ADDRESS = "0x9Cd969bC84336E2e4d8b783Ed2aCC0D7C2eeDB5E";
 
 const ABI = [
   "function mint(address to, string tokenURI) public returns (uint256)"
