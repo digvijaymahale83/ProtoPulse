@@ -49,7 +49,6 @@ CertiChain fits the minting track by turning certificate issuance into a gasless
 - Contract name: `CertificateNFT`
 - Standard: ERC-721 URI Storage
 - Network: Base Sepolia
-- Contract address: `0x9Cd969bC84336E2e4d8b783Ed2aCC0D7C2eeDB5E`
 
 Current contract behavior:
 
