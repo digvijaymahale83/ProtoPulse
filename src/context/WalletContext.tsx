@@ -30,9 +30,9 @@ export function WalletProvider({
         return;
       }
 
-      const accounts = await window.ethereum.request({
+      const accounts = (await window.ethereum.request({
         method: "eth_requestAccounts",
-      });
+      })) as string[];
 
       setWalletAddress(accounts[0]);
     } catch (error) {

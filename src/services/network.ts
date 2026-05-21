@@ -24,9 +24,12 @@ export async function switchToBaseSepolia() {
         { chainId: baseSepolia.chainId },
       ],
     });
-  } catch (switchError: any) {
+  } catch (switchError: unknown) {
 
-    if (switchError.code === 4902) {
+    if (typeof switchError === "object" &&
+      switchError !== null &&
+      "code" in switchError &&
+      switchError.code === 4902) {
       await window.ethereum.request({
         method: "wallet_addEthereumChain",
         params: [baseSepolia],

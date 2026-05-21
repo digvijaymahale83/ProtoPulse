@@ -24,7 +24,11 @@ export default function HowItWorks() {
           transition={{ duration: 0.6 }}
         >
           <h2 className="text-4xl font-bold md:text-5xl">
-            How It Works
+            How{" "}
+            <span className="inline-block bg-gradient-to-r from-blue-400 to-cyan-300 bg-clip-text text-transparent">
+              It
+            </span>{" "}
+            Works
           </h2>
 
           <p className="mt-4 text-gray-400">

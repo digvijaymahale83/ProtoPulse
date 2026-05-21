@@ -12,11 +12,11 @@ export default function CertificatePreview({
   formData,
 }: CertificatePreviewProps) {
   return (
-    <div className="flex items-center justify-center">
+    <div className="flex h-200 items-center justify-center">
 
-      <div className="w-full rounded-3xl border border-zinc-800 bg-gradient-to-br from-zinc-900 to-zinc-950 p-10 shadow-2xl">
+      <div className="flex h-200 w-full rounded-3xl border border-zinc-800 bg-gradient-to-br from-zinc-900 to-zinc-950 p-10 shadow-2xl">
 
-        <div className="rounded-3xl border border-blue-500/30 p-10">
+        <div className="flex w-full flex-col rounded-3xl border border-blue-500/30 p-10">
 
           <p className="mb-4 text-sm uppercase tracking-[0.3em] text-blue-400">
             NFT Certificate
@@ -30,7 +30,7 @@ export default function CertificatePreview({
             This certificate is proudly presented to
           </p>
 
-          <h1 className="mb-6 text-5xl font-extrabold text-white">
+          <h1 className="mb-6 line-clamp-4 break-words text-3xl font-extrabold text-white sm:text-4xl lg:text-5xl">
             {formData.studentName || "Student Name"}
           </h1>
 
@@ -38,7 +38,7 @@ export default function CertificatePreview({
             For successfully completing
           </p>
 
-          <h3 className="mb-8 text-3xl font-semibold text-blue-400">
+          <h3 className="mb-8 line-clamp-2 break-words text-2xl font-semibold text-blue-400 sm:text-3xl lg:text-4xl">
             {formData.courseName || "Course Name"}
           </h3>
 

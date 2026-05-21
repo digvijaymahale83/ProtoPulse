@@ -1,11 +1,5 @@
 import { ethers } from "ethers";
 
-declare global {
-  interface Window {
-    ethereum?: any;
-  }
-}
-
 export async function connectWallet() {
   if (!window.ethereum) {
     alert("MetaMask not installed");
@@ -15,7 +9,7 @@ export async function connectWallet() {
   try {
     const accounts = await window.ethereum.request({
       method: "eth_requestAccounts",
-    });
+    }) as string[];
 
     const provider = new ethers.BrowserProvider(window.ethereum);
 
